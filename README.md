@@ -13,3 +13,4 @@ main.py의 파일을 보면 pretrained Generator와 내가 직접 사용했던 d
 거기에 pretrained Generator와 dataset을 넣고 실행하면 된다.  
 pretrainted Generator를 넣으라는 말은 Generator를 불러오고 torch.load로 pretrained model의 parameters를 불러오라는 것.  
 
+# For Pytorch
