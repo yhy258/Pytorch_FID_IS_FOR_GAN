@@ -15,7 +15,23 @@ class CustomDataset(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         return self.datas[idx]
-
+    
+"""
+    메모리가 부족하다면..
+"""
+# class CustomDataset(torch.utils.data.Dataset): 
+#     def __init__(self, n, G, batch_size, dim):
+#         self.G = G
+#         self.batch_size = batch_size
+#         self.n = n
+#     def __len__(self):
+#         return self.n
+#     def __getitem__(self, idx): 
+#         z = torch.randn(self.batch_size, dim, device=torch.device('cuda:0'))
+#         datas = G(z)
+#         return datas[idx]
+    
+    
 
 """
     CheckPoint 불러오기
