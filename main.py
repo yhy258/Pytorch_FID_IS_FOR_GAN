@@ -2,6 +2,8 @@ from calculate_fid import FID
 from inception_score import IS
 
 class Config:
+    z_dim = 128
+    img_size = (3, 32, 32)
     batch_size = 50
     device = "cuda:0"
     dims = 2048
