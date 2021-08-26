@@ -4,7 +4,7 @@ from inception_score import IS
 class Config:
     z_dim = 128
     img_size = (3, 32, 32)
-    batch_size = 50
+    batch_size = 50 #(len(dataset)//n)
     device = "cuda:0"
     dims = 2048
     inverse = False
