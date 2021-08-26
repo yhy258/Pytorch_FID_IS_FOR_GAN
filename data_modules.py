@@ -16,22 +16,7 @@ class CustomDataset(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         return self.datas[idx]
     
-"""
-    메모리가 부족하다면..
-"""
-# class CustomDataset(torch.utils.data.Dataset): 
-#     def __init__(self, n, G, batch_size, dim):
-#         self.G = G
-#         self.batch_size = batch_size
-#         self.n = n
-#     def __len__(self):
-#         return self.n
-#     def __getitem__(self, idx): 
-#         z = torch.randn(self.batch_size, dim, device=torch.device('cuda:0'))
-#         datas = G(z)
-#         return datas[idx]
-    
-    
+
 
 """
     CheckPoint 불러오기
@@ -59,11 +44,12 @@ def generate_img(batch_size, G, dim, device):
     return fake_img
 
 
-def gen_n_images(n, G, batch_size, dim, device):
-    images = []
-    for i in range(n // batch_size + 1):
-        images.append(generate_img(batch_size, G, dim, device))
-    images = torch.cat(images, dim=0)
+def gen_n_images(n, G, batch_size, dim, img_size, device):
+    images = torch.zeros((n, *img_size))
+    
+    for i in range(n // batch_size): # 메모리 줄이기.
+        images[i*batch_size : (i+1)*batch_size] = generate_img(batch_size, G, dim, device)
+        
     return images[:n]
 
 def Generator_Imgs(args, G, dataset):
@@ -72,7 +58,7 @@ def Generator_Imgs(args, G, dataset):
         dataset=dataset, batch_size=args.batch_size, shuffle=True
     )
 
-    generated_imgs = gen_n_images(len(dataset), G, args.batch_size, args.dims, args.device)
+    generated_imgs = gen_n_images(len(dataset), G, args.batch_size, args.z_dim, args.img_size, args.device)
     generated_dataset = CustomDataset(generated_imgs)
 
     generated_loader = DataLoader(
