@@ -52,17 +52,17 @@ def load_checkpoint(model, model_dir, name):
     return iteration
 
 
-def generate_img(batch_size, G, dim):
+def generate_img(batch_size, G, dim, device):
     with torch.no_grad():
-        z = torch.randn(batch_size, dim, device=torch.device('cuda:0'))
+        z = torch.randn(batch_size, dim, device=torch.device(device))
         fake_img = G(z)
     return fake_img
 
 
-def gen_n_images(n, G, batch_size, dim):
+def gen_n_images(n, G, batch_size, dim, device):
     images = []
     for i in range(n // batch_size + 1):
-        images.append(generate_img(batch_size, G, dim))
+        images.append(generate_img(batch_size, G, dim, device))
     images = torch.cat(images, dim=0)
     return images[:n]
 
@@ -72,7 +72,7 @@ def Generator_Imgs(args, G, dataset):
         dataset=dataset, batch_size=args.batch_size, shuffle=True
     )
 
-    generated_imgs = gen_n_images(len(dataset), G, args.batch_size, args.dims)
+    generated_imgs = gen_n_images(len(dataset), G, args.batch_size, args.dims, args.device)
     generated_dataset = CustomDataset(generated_imgs)
 
     generated_loader = DataLoader(
