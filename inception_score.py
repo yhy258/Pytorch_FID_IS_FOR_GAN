@@ -39,13 +39,21 @@ def inception_score(dataloader, N, cuda=True, batch_size=32, resize=False, split
 
     # Get predictions
     preds = np.zeros((N, 1000))
+    
+    if len(next(iter(dataloader))) >= 2:
+        for i, batch in enumerate(dataloader, 0):
+            batch = batch[0].type(dtype)
+            batch_size_i = batch.size()[0]
 
-    for i, batch in enumerate(dataloader, 0):
-        batch = batch.type(dtype)
-        batch_size_i = batch.size()[0]
+            preds[i * batch_size:i * batch_size + batch_size_i] = get_pred(batch)
+    else :
+        for i, batch in enumerate(dataloader, 0):
+            batch = batch.type(dtype)
+            batch_size_i = batch.size()[0]
 
-        preds[i * batch_size:i * batch_size + batch_size_i] = get_pred(batch)
+            preds[i * batch_size:i * batch_size + batch_size_i] = get_pred(batch)
 
+    
     # Now compute the mean kl-div
     split_scores = []
 
